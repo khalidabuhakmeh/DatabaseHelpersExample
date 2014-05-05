@@ -12,7 +12,7 @@ One of the greatest features of [RavenDB](http://ravendb.net) is that it ships w
 
 Wouldn't it be cool if I could create the database on the fly for each of my test fixtures or individiual tests? **YES, YES IT WOULD!**.
 
-The code you will find in this repository does just that. Take a look at this example.
+The code you will find in this repository does just that. Take a look at this example. **The example below uses [NPoco](http://www.nuget.org/packages/NPoco/2.4.66-beta) with hard coded SQL. This is just to get the point across. The using statement with LocalDB is the important part.**
 
 ```
 [Fact]
