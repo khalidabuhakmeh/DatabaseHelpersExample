@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace DatabaseHelpersExample
 {
@@ -21,6 +22,8 @@ namespace DatabaseHelpersExample
         public LocalDb(string databaseName = null)
         {
             DatabaseName = string.IsNullOrWhiteSpace(databaseName) ? Guid.NewGuid().ToString("N") : databaseName;
+            // if numbers at start of name, trim those out
+            DatabaseName = Regex.Replace(DatabaseName, @"^\d+", string.Empty);
             CreateDatabase();
         }
 
