@@ -8,6 +8,8 @@ namespace DatabaseHelpersExample
 {
     public class LocalDb : IDisposable
     {
+        bool _disposed;
+
         public static string DatabaseDirectory = "Data";
 
         public string ConnectionStringName { get; private set; }
@@ -35,7 +37,8 @@ namespace DatabaseHelpersExample
             DatabaseLogPath = Path.Combine(OutputFolder, String.Format("{0}_log.ldf", DatabaseName));
 
             // Create Data Directory If It Doesn't Already Exist.
-            if (!Directory.Exists(OutputFolder)) {
+            if (!Directory.Exists(OutputFolder))
+            {
                 Directory.CreateDirectory(OutputFolder);
             }
 
@@ -63,12 +66,12 @@ namespace DatabaseHelpersExample
                 {
                     connection.Open();
                     var cmd = connection.CreateCommand();
-                    cmd.CommandText = string.Format("ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; exec sp_detach_db '{0}'",DatabaseName);
+                    cmd.CommandText = string.Format("ALTER DATABASE {0} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; exec sp_detach_db '{0}'", DatabaseName);
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch {}
-            finally 
+            catch { }
+            finally
             {
                 if (File.Exists(DatabaseMdfPath)) File.Delete(DatabaseMdfPath);
                 if (File.Exists(DatabaseLogPath)) File.Delete(DatabaseLogPath);
@@ -77,7 +80,31 @@ namespace DatabaseHelpersExample
 
         public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~LocalDb()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                // free other managed objects that implement
+                // IDisposable only
+            }
+
+            // release any unmanaged objects
+            // set the object references to null
             DetachDatabase();
+
+            _disposed = true;
         }
     }
 }
